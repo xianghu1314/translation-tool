@@ -1,0 +1,38 @@
+{
+  "name": "mytranslationtool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "build": {
+    "appId": "com.translation.app",
+    "mac": {
+      "icon": "images/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "images/icon.png",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    }
+  },
+  "scripts": {
+    "start": "electron .",
+    "dist-win": "electron-builder --win --x64",
+    "dist-darwin": "electron-builder --mac --x64"
+  },
+  "author": "xianghu",
+  "devDependencies": {
+    "electron": "^5.0.10",
+    "electron-builder": "^21.2.0"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

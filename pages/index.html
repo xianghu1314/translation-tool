@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的词典</title>
+    <style>
+        .fanyi__input__bg {
+            background: #f2f2f2;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 20px;
+            border: 1px solid transparent;
+            margin: 20px;
+        }
+
+        .input__original__area {
+            display: block;
+            font-family: ArialMT, "Microsoft YaHei", Arial, sans-serif, Helvetica, STHeiti;
+            width: 100%;
+            min-height: 156px;
+            border: 0;
+            background: 0 0;
+            font-size: 24px;
+            color: #333;
+            line-height: 30px;
+            overflow: auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .input__target__text {
+            font-family: ArialMT, "Microsoft YaHei", Arial, sans-serif, Helvetica, STHeiti;
+            margin: 18px 18px;
+            padding: 0;
+            border: 0;
+            background: #f2f2f2;
+            font-size: 24px;
+            color: #333;
+            line-height: 30px;
+            word-break: break-word;
+        }
+
+        .result_ext {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            line-height: 22px;
+            font-size: 16px;
+        }
+
+        .target__bar__parts {
+            margin-right: 18px;
+        }
+
+        .tools {
+            display: flex;
+        }
+
+        .copy {
+            width: 22px;
+            height: 22px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAAAAXNSR0IArs4c6QAAAMhJREFUOBHtlM0RBBEQhdnaNIQjB64S2YnEWQ7CEYIA7Dr0lu7xO2tu64L2+vPqlcJjjK+U0sE2D8758djMRLhb4U90Fdl471kIgVTbWyEEk1J+BV3nK+BMpPquc7BgjIFlc7bWns66cK31qWGlgOC/ZkwvRpnTzKiY7kd65Byar2YM/TAj51DcNf/h1SS3xOKcuw8O5Py3lKP6FEvBzFopVZVtiaVK/hSrzmufUAvQqyPnNLNeYz4b6ZHz8qMfgWfOkfOZhhXNG/BXK/EZ+76yAAAAAElFTkSuQmCC) 50% 50% no-repeat;
+        }
+
+        .copy:hover {
+            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAAAAXNSR0IArs4c6QAAANdJREFUOBFj/Pz5c/3///8bGKgMGBkZG5iobCaKcTQ1nAXFKjTO57xKht9HTqCJ4uay2lgw8E5qhyvA63JSDAaZiK4er8thThA6tx/GxEm/M3LEkMNruMCuNRgaSBFAMZzSMEa3GCXM0cMMXTE6n5B6FJfDNPNO64ExcdKfs0pwysEkUFwOE6QWPWo41pCkSrB8cA+hneEwk9lsLWBMMI01KaKoIIIjsBN7TqZKsOCyH6vLickguAxEFkdxOag8JgWghzG6XhSXIxf06ArJ4aO4nBwD8OkBAKfJLIzQd5MHAAAAAElFTkSuQmCC) 50% 50% no-repeat;
+        }
+
+        .speaker {
+            width: 24px;
+            height: 22px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAotJREFUOBHFlNtLakEUxj/NqIduT4aQRRclwhtJ4UNQQuBD/2R/QfkUpj5FgiiCqAgVaqSRUhllRVc951s0w94cOyeCOAPbWTN7rd9e8601Wu7u7nr4gWH9AaYg/y+4VCohHo/j/f39ywf8Z8b1eh2ZTAaNRgPtdtsE7vV6yGazeHl5Me1z8Vdwq9XCwcGBDiLIOAqFAorFIvb39/84TV8wAeVyGbFYDM/Pz0aW2IeHhzg7O4PL5cLY2BguLy+Rz+dNfhrc7XZxc3MjGezs7CCdTksWHo8HdrtdgvjBTqeD4+NjJJNJnJ6eYn19Xd4x84eHBw0XMHXa3t7G7u6uaHZ7e4vx8XFsbm5idXUVFotFB4yOjiIUCsmaH7fZbJidnQUTq1ar2s9Gi8fiGBkZgcPhwMzMDJxOpwkoDh8/S0tLkh2zZMfMz8+jVqsJx+v1ipeAVVEikYhkaoR8ZlNfgqnv8vKyuN3f32t3rTF3jEfWHp8Yg4OD8ub19RXDw8NiPz09aW8TWO9+wWg2m+LFWiig+gBfmMCJREIXz8hWUqkTPT4+IpfLicvCwgKur6/FZo3UEPDU1JSs2Q3Uje2WSqX63ij6RKNRUM/JyUkpXKVSkfjp6WnFhRSP7RMMBuXKnpycgM/R0RHOz88RDoe19sycWbG1mMzGxgaurq6kI6xWK+bm5jTY0u//mFnxKrPi7FM+1HFra0uy/B0jN46S7O3tgWu/3y/JKbJJY7XJghDidrvx9vami6M05jXmYP8TypsZCARUuMwihWnnY8Gjra2tYWhoSHTntgIr/8XFRakD54GBAbUt86dg5bWysiJBFxcXmJiYUNt69vl82jYafTU2OnzX7qvxd2HGuF91vytlUtAK/AAAAABJRU5ErkJggg==) 50% 50% no-repeat;
+        }
+
+        .speaker:hover {
+            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAwhJREFUOBHFlGtIFFEUx/+zOzuzq2jag0yxB4KY2eObkERhaGhiJZXRw0gtodIgSD/lhyCMAiuNkpAkEntBUVBSUSliTygkSxPCVLJEerjvx+xs996dmW1yrfwgzYc7597zP78599xzh7NarQFMwWOYAiZD/l+wu/k6bPurEPB4/nmDf83Y2/EUztqz8D15AX/fBz1YluE8eQ4Bm12/TmZ/BPu6uuE8XBMKCujP2d3UAvela2Q3lYDXG9JNCPb74b56E7ayg5CttlCAAnYcOQFfeyeE/BwYE+MhvemBq7E5pCMWp7WbJME/MARfxzN4brUymyqFzBWQ+gch9w8g+kIduJkzMJa/jUEiKsvBpy2Edec+gDci5nYLDLNnMR8rhetUA76lZ2NsUzGcdecZlAose4ogFuSBM3BMDFIJY8IcUCA4Ds7j9eDMIoSsVYBPgufeo6COjDy1vG2dANkmNz0GfHIS+KVp4BelkBMIcwQEaN5SAPnzCKsvrbGQsxre+49ZeSxFhQwejFRqF1G+G+btm8EvTtVDlYRZhDKI63KYJb3tBZ+SzGx5+Ism0adEsgn7qM3wi5uLjGTSgMMJQ2wMs+XvP7RwBaxEqgDNPbEhvepiTuO8RKhA9QPUocvY1dBEOuIu5JFRPVH9oLIjefQrnGcamUbIy4bU28dsQ3ycFsfApuXpbIECvQ/a4ThaC/flG4DbpQlVQyatZy0sYYfHL0uDmJsFb+tD5jatzFBlwYwjqioQ23GH9am4YS1rJV/nc9hrTgf7WTlcmrghIQ4B0vOmjHRE1R2D9O49SaYNMPEQ12Rq4NAF0ZYA/8dBOKpJUHcPOFEgQQICdjuimuphIq3oH/pEblwCaElspRVkPgxL6Q5Y9hZrFF2N1VXj/LnB7Nfnkj+al0Gpj1NqTKH0odeaQvklqTCXBG8jc5CBXRB1onvzPCKrD4GbFg33xStB12/tKG7MZ382+uZEUR+um4WZRBwoAyeY4Hv5GsakBeMU5l1bx63RhbA1Dquc5GLYGk+SEVb+EwFnG6rK4ubHAAAAAElFTkSuQmCC) 50% 50% no-repeat;
+        }
+
+        i {
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .close {
+            width: 24px;
+            height: 22px;
+            position: absolute;
+            top: 0;
+            right: -20px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAYNJREFUOBGtk72qwkAQhU9iVIw/vbXiIwQEtbHSyncVC60C+gD2voCGQNAmiGK8Z2CWbO4KFg5I4uzsxzkzE+92uxX4Qfg/YAjCgIqiQJZlX3Efjwf+nFi1AiIkjmOs12ucz2eroPqHkN1uh81mg+v1ao4F5Hke6vU6ns+nFF0uF1NQflEIz2u1mvz03FibTCYYjUYC2263qMII0Xyn08FyuQSfGgbExCeYKkmSRC4vFgsLwruea/z7/R6n0wlBEGA+n+N4PIpCKiCk2+3yrhVOECsUxv5xGO12W+y4IKy3rDGhMR6P0Wq1BEJYFEVOJVrvBHF6bGye52KPig6HA9ijT/EPpBBOjXZWqxWGwyF0ap9gFqi8R4Swsb1eD7PZzIJVV4MqDUgh3OwyRK2UYdzsKkxAr9dLNpqQMAyNEoXoczqdYjAYiE3C0jTVIwR8830f/X5fPkRuLO24gtOjMgY/8PIqWHt0v9/RbDZdDCvHKbL5jUbD5E2PmPkGwjoqK0OYewPmV+Tmqat5EwAAAABJRU5ErkJggg==) 50% 50% no-repeat;;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="fanyi__input__bg">
+        <i onclick="clean()" class="close target__bar__parts"></i>
+        <textarea id="inputOriginal" oninput="input()" dir="auto" class="input__original__area"
+                  placeholder="请输入你要翻译的文字或网址"
+                  autofocus></textarea>
+    </div>
+    <div class="fanyi__input__bg">
+        <div class="tools">
+            <i onclick="play()" title="朗读" id="targetSpeaker" class="speaker target__bar__parts">
+            </i>
+            <i onclick="copy()" title="复制" id="targetCopy" class="copy target__bar__parts">
+            </i>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAAAXNSR…Q1ONnAwPK8devW0zt37jwH2uSLUyE2CaDNpUCbyrDJgcQAppbft4NtBSYAAAAASUVORK5CYII="
+                 alt="">
+        </div>
+        <p class="input__target__text"></p>
+        <ul class="result_ext">
+        </ul>
+    </div>
+    <audio id="audio" controls="controls" style="display: none">
+        <source src="http://tts.youdao.com/fanyivoice?word=Mobile%20phone&le=eng&keyfrom=speaker-target"
+                type="audio/ogg"/>
+        <source src="http://tts.youdao.com/fanyivoice?word=Mobile%20phone&le=eng&keyfrom=speaker-target"
+                type="audio/mpeg"/>
+    </audio>
+</div>
+<script>
+    var t = require("../BLL/translate")
+
+    function input() {
+        var b = document.getElementById("inputOriginal").value;
+        //去掉空格
+        var _b = b.replace(/\ +/g, "");
+        //去掉回车换行
+        _b = _b.replace(/[\r\n]/g, "");
+        if (!_b) {
+            return
+        }
+        var res = t.TXTranslate("AUTO", "AUTO", b)
+        res.then(function (body) {
+            parsedBody = JSON.parse(body)
+            document.querySelector(".input__target__text").innerText = parsedBody.translateResult[0][0].tgt;
+            var ul = document.querySelector(".result_ext")
+            if (parsedBody.smartResult) {
+                var lis = ""
+                parsedBody.smartResult.entries.forEach(item => {
+                    //去掉空格
+                    item = item.replace(/\ +/g, "");
+                    //去掉回车换行
+                    item = item.replace(/[\r\n]/g, "");
+                    if (item) {
+                        lis += "<li>" + item + "</li>";
+                    }
+                })
+                ul.innerHTML = lis
+            } else {
+                ul.innerHTML = ""
+            }
+        }).catch(function (err) {
+            // POST failed...
+        });
+    }
+
+    function play() {
+        var v = document.querySelector(".input__target__text").innerText
+        if (!v) {
+            return
+        }
+        v = encodeURIComponent(v)
+        audio = new Audio("http://tts.youdao.com/fanyivoice?word=" + v + "&le=eng&keyfrom=speaker-target");//路径
+        audio.play();
+    }
+
+    function copy() {
+        var v = document.querySelector(".input__target__text").innerText
+        if (!v) {
+            return
+        }
+        const clipboard = require('electron').clipboard
+        clipboard.writeText(v)
+        Toast("已复制")
+    }
+
+    function clean() {
+        document.getElementById("inputOriginal").value = "";
+    }
+
+    let ipcRenderer = require('electron').ipcRenderer;
+    ipcRenderer.on('main-process-activate', (event, arg) => {
+        const clipboard = require('electron').clipboard;
+        document.getElementById("inputOriginal").value = clipboard.readText()
+        input()
+    });
+
+</script>
+<script>
+    function Toast(msg, duration) {
+        duration = isNaN(duration) ? 3000 : duration;
+        var m = document.createElement('div');
+        m.innerHTML = msg;
+        m.style.cssText = "max-width:60%;min-width: 150px;padding:0 14px;height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 0, 0,.7);font-size: 16px;";
+        document.body.appendChild(m);
+        setTimeout(function () {
+            var d = 0.5;
+            m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+            m.style.opacity = '0';
+            setTimeout(function () {
+                document.body.removeChild(m)
+            }, d * 1000);
+        }, duration);
+    }
+</script>
+</body>
+</html>
